@@ -1,0 +1,171 @@
+using System;
+
+public class TV
+{
+    public void TurnOn()
+    {
+        Console.WriteLine("Телевизор включен.");
+    }
+
+    public void TurnOff()
+    {
+        Console.WriteLine("Телевизор выключен.");
+    }
+
+    public void SetChannel(int channel)
+    {
+        Console.WriteLine($"Канал установлен на {channel}.");
+    }
+
+    public void SetAudioInput()
+    {
+        Console.WriteLine("Аудиовход на телевизоре установлен.");
+    }
+}
+
+public class AudioSystem
+{
+    public void TurnOn()
+    {
+        Console.WriteLine("Аудиосистема включена.");
+    }
+
+    public void TurnOff()
+    {
+        Console.WriteLine("Аудиосистема выключена.");
+    }
+
+    public void SetVolume(int level)
+    {
+        Console.WriteLine($"Громкость установлена на {level}.");
+    }
+}
+
+public class DVDPlayer
+{
+    public void Play()
+    {
+        Console.WriteLine("Воспроизведение DVD начато.");
+    }
+
+    public void Pause()
+    {
+        Console.WriteLine("Воспроизведение DVD приостановлено.");
+    }
+
+    public void Stop()
+    {
+        Console.WriteLine("Воспроизведение DVD остановлено.");
+    }
+}
+
+public class GameConsole
+{
+    public void TurnOn()
+    {
+        Console.WriteLine("Игровая консоль включена.");
+    }
+
+    public void StartGame(string game)
+    {
+        Console.WriteLine($"Игра {game} запущена.");
+    }
+}
+
+
+public class HomeTheaterFacade
+{
+    private TV _tv;
+    private AudioSystem _audioSystem;
+    private DVDPlayer _dvdPlayer;
+    private GameConsole _gameConsole;
+
+    public HomeTheaterFacade(TV tv, AudioSystem audioSystem, DVDPlayer dvdPlayer, GameConsole gameConsole)
+    {
+        this._tv = tv;
+        this._audioSystem = audioSystem;
+        this._dvdPlayer = dvdPlayer;
+        this._gameConsole = gameConsole;
+    }
+
+    public void WatchMovie()
+    {
+        Console.WriteLine("Подготовка к просмотру фильма...");
+        this._tv.TurnOn();
+        this._audioSystem.TurnOn();
+        this._audioSystem.SetVolume(5);
+        this._dvdPlayer.Play();
+        Console.WriteLine("Приятного просмотра!");
+    }
+
+    public void EndMovie()
+    {
+        Console.WriteLine("Выключение системы после просмотра фильма...");
+        this._dvdPlayer.Stop();
+        this._audioSystem.TurnOff();
+        this._tv.TurnOff();
+    }
+
+    public void StartGaming(string game)
+    {
+        Console.WriteLine("Подготовка игровой консоли...");
+        this._tv.TurnOn();
+        this._gameConsole.TurnOn();
+        this._gameConsole.StartGame(game);
+    }
+
+    public void TurnOffSystem()
+    {
+        Console.WriteLine("Выключение всей системы...");
+        this._dvdPlayer.Stop();
+        this._audioSystem.TurnOff();
+        this._tv.TurnOff();
+        Console.WriteLine("Система выключена.");
+    }
+
+    public void ListenToMusic()
+    {
+        Console.WriteLine("Подготовка к прослушиванию музыки...");
+        this._tv.TurnOn();
+        this._audioSystem.TurnOn();
+        this._tv.SetAudioInput();
+        Console.WriteLine("Приятного прослушивания музыки!");
+    }
+
+    public void SetVolume(int level)
+    {
+        Console.WriteLine($"Установка громкости на {level}.");
+        this._audioSystem.SetVolume(level);
+    }
+}
+
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        TV tv = new TV();
+        AudioSystem audioSystem = new AudioSystem();
+        DVDPlayer dvdPlayer = new DVDPlayer();
+        GameConsole gameConsole = new GameConsole();
+
+        HomeTheaterFacade homeTheater = new HomeTheaterFacade(tv, audioSystem, dvdPlayer, gameConsole);
+
+        homeTheater.WatchMovie();     
+        Console.WriteLine();
+
+        homeTheater.EndMovie();       
+        Console.WriteLine();
+
+        homeTheater.StartGaming("Super Mario"); 
+        Console.WriteLine();
+
+        homeTheater.ListenToMusic();  
+        Console.WriteLine();
+
+        homeTheater.SetVolume(7);    
+        Console.WriteLine();
+
+        homeTheater.TurnOffSystem();  
+    }
+}
