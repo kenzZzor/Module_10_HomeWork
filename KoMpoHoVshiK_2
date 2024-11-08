@@ -1,0 +1,119 @@
+using System;
+using System.Collections.Generic;
+
+public abstract class FileSystemComponent
+{
+    protected string name;
+
+    public FileSystemComponent(string name)
+    {
+        this.name = name;
+    }
+
+    public abstract void Display(int indent = 0);
+    public abstract int GetSize();
+}
+
+public class File : FileSystemComponent
+{
+    private int size;
+
+    public File(string name, int size) : base(name)
+    {
+        this.size = size;
+    }
+
+    public override void Display(int indent = 0)
+    {
+        Console.WriteLine($"{new string(' ', indent)}- File: {name}, Size: {size}KB");
+    }
+
+    public override int GetSize()
+    {
+        return size;
+    }
+}
+
+public class Directory : FileSystemComponent
+{
+    private List<FileSystemComponent> components = new List<FileSystemComponent>();
+
+    public Directory(string name) : base(name) { }
+
+    public void Add(FileSystemComponent component)
+    {
+        if (!components.Contains(component))
+        {
+            components.Add(component);
+            Console.WriteLine($"Added {component.GetType().Name} '{component.name}' to Directory '{name}'");
+        }
+        else
+        {
+            Console.WriteLine($"{component.GetType().Name} '{component.name}' already exists in Directory '{name}'");
+        }
+    }
+
+    public void Remove(FileSystemComponent component)
+    {
+        if (components.Contains(component))
+        {
+            components.Remove(component);
+            Console.WriteLine($"Removed {component.GetType().Name} '{component.name}' from Directory '{name}'");
+        }
+        else
+        {
+            Console.WriteLine($"{component.GetType().Name} '{component.name}' does not exist in Directory '{name}'");
+        }
+    }
+
+    public override void Display(int indent = 0)
+    {
+        Console.WriteLine($"{new string(' ', indent)}+ Directory: {name}");
+        foreach (var component in components)
+        {
+            component.Display(indent + 2);
+        }
+    }
+
+    public override int GetSize()
+    {
+        int totalSize = 0;
+        foreach (var component in components)
+        {
+            totalSize += component.GetSize();
+        }
+        return totalSize;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        File file1 = new File("File1.txt", 10);
+        File file2 = new File("File2.txt", 20);
+        File file3 = new File("File3.txt", 15);
+        File file4 = new File("File4.txt", 25);
+
+        Directory rootDir = new Directory("Root");
+        Directory subDir1 = new Directory("SubDir1");
+        Directory subDir2 = new Directory("SubDir2");
+
+        rootDir.Add(file1);
+        rootDir.Add(subDir1);
+        
+        subDir1.Add(file2);
+        subDir1.Add(subDir2);
+
+        subDir2.Add(file3);
+        subDir2.Add(file4);
+
+        subDir2.Add(file4); 
+
+        subDir1.Remove(file4); 
+
+        Console.WriteLine("\nFile System Structure:");
+        rootDir.Display();
+        Console.WriteLine($"\nTotal Size of '{rootDir.name}': {rootDir.GetSize()}KB");
+    }
+}
